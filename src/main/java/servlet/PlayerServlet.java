@@ -28,6 +28,12 @@ public class PlayerServlet extends HttpServlet {
             return;
         }
 
+        if ("edit".equals(action)) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            Player p = dao.getById(id);
+            req.setAttribute("player", p);
+        }
+
         List<Player> list = dao.getAll();
         req.setAttribute("list", list);
 
@@ -37,6 +43,8 @@ public class PlayerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        String idStr = req.getParameter("id");
 
         String name = req.getParameter("name");
         String full = req.getParameter("fullName");
@@ -56,7 +64,12 @@ public class PlayerServlet extends HttpServlet {
         p.setAge(age);
         p.setIndexId(indexId);
 
-        dao.insert(p);
+        if (idStr == null || idStr.isEmpty()) {
+            dao.insert(p);
+        } else {
+            p.setId(Integer.parseInt(idStr));
+            dao.update(p);
+        }
 
         resp.sendRedirect("player");
     }

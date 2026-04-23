@@ -44,6 +44,45 @@ public class PlayerDAO {
         return list;
     }
 
+    public Player getById(int id) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "SELECT * FROM player WHERE player_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Player p = new Player();
+                p.setId(rs.getInt("player_id"));
+                p.setName(rs.getString("name"));
+                p.setFullName(rs.getString("full_name"));
+                p.setAge(rs.getString("age"));
+                p.setIndexId(rs.getInt("index_id"));
+                return p;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void update(Player p) {
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "UPDATE player SET name=?, full_name=?, age=?, index_id=? WHERE player_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getFullName());
+            ps.setString(3, p.getAge());
+            ps.setInt(4, p.getIndexId());
+            ps.setInt(5, p.getId());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void delete(int id) {
         try {
             Connection con = DBConnection.getConnection();
