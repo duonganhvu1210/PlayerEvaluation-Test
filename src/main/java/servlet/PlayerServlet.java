@@ -19,6 +19,15 @@ public class PlayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        String action = req.getParameter("action");
+
+        if ("delete".equals(action)) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            dao.delete(id);
+            resp.sendRedirect("player");
+            return;
+        }
+
         List<Player> list = dao.getAll();
         req.setAttribute("list", list);
 
@@ -35,8 +44,8 @@ public class PlayerServlet extends HttpServlet {
         int indexId = Integer.parseInt(req.getParameter("indexId"));
 
         // VALIDATE
-        if(name.isEmpty() || full.isEmpty()){
-            req.setAttribute("error","Không được để trống");
+        if (name.isEmpty() || full.isEmpty()) {
+            req.setAttribute("error", "Không được để trống");
             doGet(req, resp);
             return;
         }
